@@ -1,4 +1,15 @@
+plugins {
+    id 'com.gladed.androidgitversion' version '0.3.4'
+}
+
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+androidGitVersion {
+    codeFormat = 'MNNPPP'
+    format = '%tag%%-count%%-commit%'
+}
 
 android {
     compileSdkVersion 26
@@ -6,8 +17,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        versionCode androidGitVersion.code()
+        versionName androidGitVersion.name()
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
