@@ -9,7 +9,13 @@ apply plugin: 'kotlin-android-extensions'
 
 androidGitVersion {
     codeFormat = 'MNNPPP'
-    format = '%tag%%-count%%-commit%'
+    format = '%tag%-%count%-%commit%-%dirty%'
+}
+
+install {
+    repositories.mavenInstaller {
+        pom.artifactId = 'rx-bluetooth-adapter'
+    }
 }
 
 android {
@@ -20,8 +26,9 @@ android {
         targetSdkVersion 26
         versionCode androidGitVersion.code()
         versionName androidGitVersion.name()
-        version = androidGitVersion.name()
+
         group = 'com.github.zakaprov'
+        version = androidGitVersion.name()
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
