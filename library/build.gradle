@@ -1,4 +1,5 @@
 plugins {
+    id 'com.github.dcendents.android-maven' version '2.0'
     id 'com.gladed.androidgitversion' version '0.3.4'
 }
 
@@ -19,6 +20,8 @@ android {
         targetSdkVersion 26
         versionCode androidGitVersion.code()
         versionName androidGitVersion.name()
+        version = androidGitVersion.name()
+        group = 'com.github.zakaprov'
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
