@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.support.v4.content.ContextCompat
-import android.util.Pair
 import com.cantrowitz.rxbroadcast.RxBroadcast
 import com.github.zakaprov.rxbluetoothadapter.error.BluetoothDisabledError
 import com.github.zakaprov.rxbluetoothadapter.error.BluetoothPairingError
