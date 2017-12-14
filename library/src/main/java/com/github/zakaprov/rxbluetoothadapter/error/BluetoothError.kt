@@ -7,5 +7,5 @@ class BluetoothPairingError : BluetoothError("Bluetooth pairing process failed."
 class BluetoothSocketConnectionError : BluetoothError("Bluetooth socket connection failed.")
 class BluetoothUnsupportedError : BluetoothError("Bluetooth not supported by the device.")
 
-data class BluetoothPermissionError(private val missingPermissions: List<String>) :
+data class BluetoothPermissionError(val missingPermissions: List<String>) :
     BluetoothError("Bluetooth permissions missing: $missingPermissions.")
