@@ -26,20 +26,70 @@ val adapter = RxBluetoothAdapter(context)
 ```
 
 ### Scanning for devices
-The call to 'startDeviceScan' checks the required Bluetooth preconditions and either throws an error or continues with the scan, emitting discovered devices through the `Observable`.
+We can initiate a scan for nearby Bluetooth devices by calling `startDeviceScan` on the adapter object. This call checks the required Bluetooth preconditions and either throws an error or continues with the scan, emitting discovered devices through the returned `Observable`.
 Calling this method during an already ongoing scan is safe, the obtained `Observable` will not reemit devices which were discovered earlier during the scan.
 
 ```kotlin
-val disposable = adapter.startDeviceScan()
-    .subscribe(
-        { device ->
-            // Process next discovered device here
-        },
-        { error ->
-            // Handle error here
-        },
-        {
+adapter.startDeviceScan()
+    .subscribe({ device ->
+            // Process next discovered device
+        }, { error ->
+            // Handle error
+        }, {
             // Scan complete
         }
     )
 ```
+
+### Device pairing
+Having a `BluetoothDevice` object (e.g. obtained from a device scan), we can use the adapter's method `pairDevice` to start the pairing (bonding) process with that device.
+The resulting `Single` returns `true` when pairing is successful (or the device is already paired with) and `false` when the process gets cancelled.
+
+```kotlin
+adapter.pairDevice(bluetoothDevice)
+    .subscribe({ result: Boolean ->
+            // Process pairing result
+        }, { error ->
+            // Handle error
+        }
+    )
+```
+
+We can also query the adapter for already paired devices by accessing the field `pairedDevices`:
+
+```kotlin
+adapter.pairedDevices()
+    .subscribe({ device ->
+        // Do something with the paired device
+    })
+```
+
+### Connecting to a device
+One of the main goals for this library was to provide a simple way of establishing serial port (SPP) connections to Bluetooth devices. Here's how we can connect to a remote `BluetoothDevice` using `RxBluetoothAdapter`:
+
+```kotlin
+adapter.connectToDevice(bluetoothDevice)
+    .subscribe({ socket: BluetoothSocket ->
+        // Connection successful, save and/or use the obtained socket object
+    }, { error ->
+        // Connection failed, handle the error
+    })
+```
+
+After obtaining a socket we can use it for two-way communication with the remote device. The communication itself is not part of the library, since the actual implementation will vary depending on the use case.
+
+### Observing events
+`RxBluetoothAdapter` includes a reactive stream for monitoring the connection status of remote devices:
+
+```kotlin
+adapter.connectionEventStream
+    .subscribe({ (state, device) ->
+        when (state) {
+            ConnectionState.CONNECTED -> Log.d("tag", "${device.address} - connected")
+            ConnectionState.CONNECTING -> Log.d("tag", "${device.address} - connecting")
+            ConnectionState.DISCONNECTED -> Log.d("tag", "${device.address} - disconnected")
+        }
+    })
+```
+
+This stream is based on broadcasts from the operating system (thanks to [RxBroadcast](https://github.com/cantrowitz/RxBroadcast) library). Certain events can also be emitted by this library, e.g. `ConnectionState.CONNECTED` will be sent whenever a call to `connectToDevice` succeeds.
