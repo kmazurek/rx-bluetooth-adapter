@@ -27,6 +27,7 @@ val adapter = RxBluetoothAdapter(context)
 
 ### Scanning for devices
 We can initiate a scan for nearby Bluetooth devices by calling `startDeviceScan` on the adapter object. This call checks the required Bluetooth preconditions and either throws an error or continues with the scan, emitting discovered devices through the returned `Observable`.
+
 Calling this method during an already ongoing scan is safe, the obtained `Observable` will not reemit devices which were discovered earlier during the scan.
 
 ```kotlin
@@ -43,7 +44,8 @@ adapter.startDeviceScan()
 
 ### Device pairing
 Having a `BluetoothDevice` object (e.g. obtained from a device scan), we can use the adapter's method `pairDevice` to start the pairing (bonding) process with that device.
-The resulting `Single` returns `true` when pairing is successful (or the device is already paired with) and `false` when the process gets cancelled.
+
+The resulting `Single` returns `true` when pairing is successful (or the device is already paired with) and `false` when the process gets cancelled:
 
 ```kotlin
 adapter.pairDevice(bluetoothDevice)
