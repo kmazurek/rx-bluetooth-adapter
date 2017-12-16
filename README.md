@@ -10,8 +10,8 @@ The idea of this library is to provide reactive bindings and extensions for [Blu
 
 The library was built with the following requirements in mind:
 
-1. The entire public API should be based on RxJava stream types (i.e. `Observable`, `Single` and `Completable`).
-2. Bluetooth preconditions (e.g. adapter enabled, permissions granted, device paired) should be checked eagerly on each qualifying call.
+1. The entire public API should be based on RxJava stream types (i.e. [Observable](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Observable.html), [Single](http://reactivex.io/RxJava/javadoc/io/reactivex/Single.html) and [Completable](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Completable.html)).
+2. Bluetooth preconditions (e.g. adapter enabled, permissions granted, device paired) should be checked eagerly on every call which requires them.
 3. Any exceptions raised inside the library should be propagated downstream via Rx.
 
 `RxBluetoothAdapter` is aimed specifically at the classic Bluetooth API (< 4.0), it does not cover Bluetooth Low Energy. For BLE, I recommend using the excellent [RxAndroidBle](https://github.com/Polidea/RxAndroidBle) library.
@@ -47,7 +47,7 @@ The resulting `Single` returns `true` when pairing is successful (or the device 
 
 ```kotlin
 adapter.pairDevice(bluetoothDevice)
-    .subscribe({ result: Boolean ->
+    .subscribe({ result ->
             // Process pairing result
         }, { error ->
             // Handle error
@@ -60,8 +60,11 @@ We can also query the adapter for already paired devices by accessing the field 
 ```kotlin
 adapter.pairedDevices()
     .subscribe({ device ->
-        // Do something with the paired device
-    })
+            // Do something with the paired device
+        }, { error ->
+            // Handle error
+        }
+    )
 ```
 
 ### Connecting to a device
@@ -69,14 +72,14 @@ One of the main goals for this library was to provide a simple way of establishi
 
 ```kotlin
 adapter.connectToDevice(bluetoothDevice)
-    .subscribe({ socket: BluetoothSocket ->
+    .subscribe({ socket ->
         // Connection successful, save and/or use the obtained socket object
     }, { error ->
         // Connection failed, handle the error
     })
 ```
 
-After obtaining a socket we can use it for two-way communication with the remote device. The communication itself is not part of the library, since the actual implementation will vary depending on the use case.
+After obtaining a [BluetoothSocket](https://developer.android.com/reference/android/bluetooth/BluetoothSocket.html) we can use it for two-way communication with the remote device. The communication itself is not part of the library, since the actual implementation will vary depending on the use case.
 
 ### Observing events
 `RxBluetoothAdapter` includes a reactive stream for monitoring the connection status of remote devices:
@@ -105,6 +108,9 @@ adapter.scanStateStream
 
 Both these streams are implemented using [ReplaySubject](http://reactivex.io/RxJava/javadoc/io/reactivex/subjects/ReplaySubject.html)s and will replay the last reported value to any new subscribers.
 
+## Examples
+
+
 ## Installation
 This library is available through [JitPack](https://jitpack.io/). To use it, first add the JitPack Maven repository to your **top level** `build.gradle` like in the below example:
 
@@ -119,4 +125,4 @@ allprojects {
 
 Once the repository is added, just add the following line to your application's `build.gradle` under `dependencies`:
 
-`implementation 'com.github.zakaprov:rx-bluetooth-adapter:1.0.2'`
+`implementation 'com.github.zakaprov:rx-bluetooth-adapter:1.1.0'`
