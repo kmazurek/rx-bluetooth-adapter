@@ -92,4 +92,31 @@ adapter.connectionEventStream
     })
 ```
 
-This stream is based on broadcasts from the operating system (thanks to [RxBroadcast](https://github.com/cantrowitz/RxBroadcast) library). Certain events can also be emitted by this library, e.g. `ConnectionState.CONNECTED` will be sent whenever a call to `connectToDevice` succeeds.
+This stream is based on broadcasts from the operating system (thanks to [RxBroadcast](https://github.com/cantrowitz/RxBroadcast)). Certain events can also be emitted by `RxBluetoothAdapter`, e.g. `ConnectionState.CONNECTED` will be sent whenever a call to `connectToDevice` succeeds.
+
+There is also a separate stream which can be used to watch the status of device scanning (i.e. if there is currently a device discovery in progress):
+
+```kotlin
+adapter.scanStateStream
+    .subscribe({ isScanning ->
+        // Do something depending on the state
+    })
+```
+
+Both these streams are implemented using [ReplaySubject](http://reactivex.io/RxJava/javadoc/io/reactivex/subjects/ReplaySubject.html)s and will replay the last reported value to any new subscribers.
+
+## Installation
+This library is available through [JitPack](https://jitpack.io/). To use it, first add the JitPack Maven repository to your **top level** `build.gradle` like in the below example:
+
+```
+allprojects {
+    repositories {
+        . . .
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+Once the repository is added, just add the following line to your application's `build.gradle` under `dependencies`:
+
+`implementation 'com.github.zakaprov:rx-bluetooth-adapter:1.0.2'`
