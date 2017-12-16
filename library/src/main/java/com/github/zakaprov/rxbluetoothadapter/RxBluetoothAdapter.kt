@@ -30,8 +30,17 @@ enum class ConnectionState {
 
 class RxBluetoothAdapter(private val appContext: Context) {
 
+    /**
+     * Returns a stream of devices which are recognised as previously paired by the local Bluetooth adapter.
+     *
+     * @return an [Observable] created from the list of adapter's bonded devices.
+     *
+     * @throws BluetoothDisabledError if Bluetooth is disabled on the device.
+     * @throws BluetoothUnsupportedError if Bluetooth is unsupported on the device.
+     */
     val pairedDevices: Observable<BluetoothDevice>
-        get() = if (adapter == null) Observable.empty() else adapter.bondedDevices.toObservable()
+        get() = assertConditions()
+            .andThen(adapter?.bondedDevices?.toObservable())
 
     /**
      * Returns a stream of changes to the connection state of remote Bluetooth devices. Each emitted item is a [Pair]
