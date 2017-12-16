@@ -110,9 +110,6 @@ adapter.scanStateStream
 
 Both these streams are implemented using [ReplaySubject](http://reactivex.io/RxJava/javadoc/io/reactivex/subjects/ReplaySubject.html)s and will replay the last reported value to any new subscribers.
 
-## Examples
-
-
 ## Installation
 This library is available through [JitPack](https://jitpack.io/). To use it, first add the JitPack Maven repository to your **top level** `build.gradle` like in the below example:
 
