@@ -124,4 +124,4 @@ allprojects {
 
 Once the repository is added, just add the following line to your application's `build.gradle` under `dependencies`:
 
-`implementation 'com.github.zakaprov:rx-bluetooth-adapter:1.1.0'`
+`implementation 'com.github.zakaprov:rx-bluetooth-adapter:1.1.1'`
