@@ -9,7 +9,7 @@ apply plugin: 'kotlin-android-extensions'
 
 androidGitVersion {
     codeFormat = 'MNNPPP'
-    format = '%tag%-%count%-%commit%-%dirty%'
+    format = '%tag%%-count%%-commit%%-dirty%'
 }
 
 install {
@@ -20,6 +20,10 @@ install {
 
 android {
     compileSdkVersion 26
+
+    packagingOptions {
+        exclude 'LICENSE'
+    }
 
     defaultConfig {
         minSdkVersion 21
